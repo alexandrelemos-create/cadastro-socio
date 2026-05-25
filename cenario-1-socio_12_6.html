@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content">
+<title>Cenário 1 — Cadastro pelo Sócio</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}html,body{height:100%;height:100dvh;}
+body{background:#fff;display:flex;flex-direction:column;align-items:center;min-height:100dvh;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;margin:0;padding:0;}
+.tag{display:none;}
+.device{width:100%;max-width:430px;height:100dvh;background:#fff;border-radius:0;box-shadow:none;overflow:hidden;position:relative;}
+.screen{display:none;flex-direction:column;height:100%;overflow-y:auto;overflow-x:hidden;position:absolute;width:100%;top:0;left:0;background:#fff;animation:fi .18s ease;-webkit-overflow-scrolling:touch;}
+.screen.active{display:flex;}
+@keyframes fi{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.hidden{display:none!important;}
+.logo{display:flex;align-items:center;padding:48px 24px 0;}
+.lm{font-size:26px;font-weight:800;color:#6B21A8;letter-spacing:-1px;}
+.lm span{color:#22c55e;}
+.mla{margin-left:auto;}
+.av{width:32px;height:32px;border-radius:50%;background:#f0ebff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#7C3AED;font-size:17px;}
+.back{display:flex;align-items:center;gap:6px;padding:14px 24px 0;cursor:pointer;color:#7C3AED;font-size:15px;font-weight:500;}
+.back svg{width:18px;height:18px;flex-shrink:0;}
+.body{padding:20px 24px 0;flex:1;}
+.sp{flex:1;}
+h1{font-size:22px;font-weight:700;color:#111;line-height:1.3;margin-bottom:6px;}
+.sub{font-size:14px;color:#666;margin-bottom:20px;line-height:1.5;}
+label{font-size:13px;color:#444;display:block;margin-bottom:5px;margin-top:14px;}
+input[type=text],input[type=password]{width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:13px 14px;font-size:15px;color:#111;background:#fff;outline:none;transition:border-color .15s;}
+input:focus{border-color:#7C3AED;}
+input::placeholder{color:#bbb;}
+input[readonly]{background:#f9f9f9;color:#666;}
+.iw{position:relative;}
+.eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#999;}
+.ft{padding:16px 24px 32px;display:flex;flex-direction:column;gap:10px;position:sticky;bottom:0;background:#fff;z-index:5;}
+.bp{width:100%;padding:15px;border-radius:50px;background:#7C3AED;color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;transition:transform .1s;}
+.bp:active{transform:scale(.98);}
+.bp:disabled{background:#e0e0e0;color:#aaa;cursor:default;transform:none;}
+.bo{width:100%;padding:14px;border-radius:50px;background:#fff;color:#7C3AED;font-size:16px;font-weight:600;border:2px solid #7C3AED;cursor:pointer;}
+.bg{width:100%;padding:14px;border-radius:50px;background:#f3f3f3;color:#aaa;font-size:15px;border:none;cursor:default;}
+.bd{width:100%;padding:15px;border-radius:8px;background:#111;color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;}
+.brf{padding:0 24px 32px;}
+.brf p{font-size:12px;color:#888;line-height:1.5;}
+.brf a{color:#7C3AED;font-weight:600;text-decoration:none;}
+.brl{display:flex;gap:16px;margin-top:8px;opacity:.4;}
+.brl span{font-size:13px;font-weight:700;letter-spacing:1px;color:#555;}
+/* BS */
+.bs-ov{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:10;display:flex;align-items:flex-end;}
+.bs{background:#fff;border-radius:20px 20px 0 0;width:100%;padding:12px 24px 36px;animation:su .25s ease;}
+.bsh{width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 20px;}
+/* OTP */
+.oh{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.oi{font-size:38px;flex-shrink:0;}
+.oh h2{font-size:18px;font-weight:700;color:#111;}
+.oh p{font-size:13px;color:#666;}
+.or{display:flex;gap:10px;justify-content:center;margin-bottom:12px;}
+.ob{width:46px;height:52px;border:1.5px solid #e0e0e0;border-radius:10px;text-align:center;font-size:20px;font-weight:600;color:#111;background:#faf9ff;outline:none;transition:border-color .15s;}
+.ob:focus{border-color:#7C3AED;background:#fff;}
+.ob.filled{border-color:#c4b5fd;}
+.ob.err{border-color:#ef4444;background:#fff5f5;}
+.emsg{color:#ef4444;font-size:13px;margin:4px 0 8px;}
+.res{display:flex;align-items:center;gap:6px;justify-content:center;font-size:13px;color:#888;margin-bottom:12px;}
+/* Doc */
+.ro{display:flex;align-items:center;gap:12px;border:1.5px solid #e0e0e0;border-radius:12px;padding:15px 16px;margin-bottom:10px;cursor:pointer;font-size:16px;font-weight:500;color:#111;transition:border-color .15s;}
+.ro.sel{border-color:#7C3AED;background:#faf9ff;}
+.rc{width:20px;height:20px;border-radius:50%;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rc.on{border-color:#7C3AED;}
+.rc.on::after{content:"";width:10px;height:10px;border-radius:50%;background:#7C3AED;}
+.ti{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px;color:#555;}
+/* Cam */
+.csc{background:#2a2a2a;}
+.chd{display:flex;justify-content:space-between;align-items:center;padding:48px 20px 16px;background:#1a1a1a;}
+.chd span{color:#fff;font-size:16px;font-weight:600;}
+.cx{background:none;border:none;cursor:pointer;color:#fff;font-size:22px;}
+.cbd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.fnd{width:200px;height:200px;position:relative;display:flex;align-items:center;justify-content:center;}
+.co{position:absolute;width:22px;height:22px;border-color:#fff;border-style:solid;}
+.co.tl{top:-1px;left:-1px;border-width:3px 0 0 3px;}.co.tr{top:-1px;right:-1px;border-width:3px 3px 0 0;}
+.co.bl{bottom:-1px;left:-1px;border-width:0 0 3px 3px;}.co.br{bottom:-1px;right:-1px;border-width:0 3px 3px 0;}
+.cdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5);}
+.ctp{color:#fff;font-size:13px;margin-top:16px;background:rgba(0,0,0,.5);padding:6px 16px;border-radius:20px;}
+.cft{padding:24px;display:flex;justify-content:center;}
+.sht{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sht::after{content:"";width:48px;height:48px;border-radius:50%;background:#fff;}
+.pf{width:100%;height:240px;border-radius:14px;border:3px solid #4ade80;display:flex;align-items:center;justify-content:center;background:#e8f4d4;margin-bottom:20px;font-size:14px;color:#666;}
+/* Unico */
+.usc{background:#f5f5f5;}
+.ub{display:flex;align-items:center;justify-content:center;padding:14px 24px;background:#fff;border-bottom:1px solid #eee;font-size:13px;color:#555;gap:6px;}
+.ubd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+.sk{background:#e8e8e8;border-radius:12px;animation:pulse 1.4s ease infinite;}
+/* Pwd */
+.pwr{margin:10px 0;display:flex;flex-direction:column;gap:6px;}
+.pr{display:flex;align-items:center;gap:8px;font-size:13px;color:#999;}
+.pr.ok{color:#16a34a;}.pr.fail{color:#dc2626;}
+.ri{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:#f0f0f0;color:#999;}
+.pr.ok .ri{background:#dcfce7;color:#16a34a;}.pr.fail .ri{background:#fee2e2;color:#dc2626;}
+/* Gestao */
+.fb{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;}
+.fb::-webkit-scrollbar{display:none;}
+.ch{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;border:1.5px solid #e0e0e0;color:#555;background:#fff;flex-shrink:0;}
+.ch.active{background:#7C3AED;color:#fff;border-color:#7C3AED;}
+.cr{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.ci{width:36px;height:36px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.cn{font-size:15px;font-weight:600;color:#111;}
+.cc{font-size:12px;color:#888;}
+.cb2{margin-left:auto;padding:4px 10px;border-radius:6px;background:#f0ebff;color:#7C3AED;font-size:12px;font-weight:600;flex-shrink:0;}
+.fab{position:absolute;bottom:100px;right:20px;width:52px;height:52px;border-radius:50%;background:#22c55e;border:none;cursor:pointer;font-size:26px;color:#fff;box-shadow:0 4px 16px rgba(34,197,94,.4);display:flex;align-items:center;justify-content:center;}
+/* AE sheet */
+.ae-ov{position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:10;display:flex;align-items:flex-end;}
+.ae{background:#fff;border-radius:20px 20px 0 0;width:100%;padding:16px 0 8px;animation:su .25s ease;}
+.aeh{display:flex;align-items:center;justify-content:space-between;padding:0 20px 12px;border-bottom:1px solid #f0f0f0;}
+.aeh h2{font-size:17px;font-weight:700;color:#111;}
+.aex{background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
+.aes{font-size:13px;color:#888;padding:12px 20px 6px;}
+.ecr{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid #f5f5f5;cursor:pointer;}
+.ck{width:22px;height:22px;border-radius:5px;border:2px solid #e0e0e0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:13px;font-weight:700;color:#fff;}
+.ck.on{background:#22c55e;border-color:#22c55e;}
+.bsr{display:flex;align-items:center;gap:10px;padding:13px 20px;background:#f9f7ff;cursor:pointer;border-bottom:1px solid #f0f0f0;}
+.bsr span{color:#7C3AED;font-size:14px;font-weight:600;}
+.aef{padding:14px 20px 36px;}
+/* Doc upload */
+.ds{border:1.5px solid #e0e0e0;border-radius:12px;padding:16px;margin-bottom:12px;}
+.dtr{display:flex;align-items:center;gap:10px;}
+.dic{width:36px;height:36px;border-radius:8px;background:#f3f0ff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.dnm{font-size:15px;font-weight:600;color:#111;flex:1;}
+.uz{border:1.5px dashed #d8b4fe;border-radius:10px;padding:18px;text-align:center;margin-top:12px;cursor:pointer;background:#faf9ff;}
+.uz p{font-size:12px;color:#aaa;margin-top:4px;line-height:1.4;}
+.ckr{display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;}
+.cks{width:20px;height:20px;border:1.5px solid #ccc;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;margin-top:1px;transition:all .15s;}
+.cks.on{background:#7C3AED;border-color:#7C3AED;}
+.dstps{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+.dst{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#555;line-height:1.4;}
+.dnum{width:24px;height:24px;border-radius:50%;background:#7C3AED;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+/* Banco */
+.sf{border:1.5px solid #e0e0e0;border-radius:10px;padding:13px 14px;font-size:15px;color:#bbb;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-bottom:2px;}
+/* Progress */
+.pc{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid #e0e0e0;border-radius:12px;padding:14px;margin-bottom:16px;}
+.sb{width:44px;height:44px;border-radius:50%;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#888;flex-shrink:0;}
+.sc{background:#fff;border:1.5px solid #e0e0e0;border-radius:12px;padding:16px;margin-bottom:12px;}
+.sc h3{font-size:15px;font-weight:600;color:#111;margin-bottom:12px;}
+.ab{display:flex;gap:10px;background:#fff8f0;border:1px solid #fed7aa;border-radius:10px;padding:12px;margin-bottom:12px;}
+.ab p{font-size:13px;color:#92400e;line-height:1.4;}
+.sav{width:40px;height:40px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#666;flex-shrink:0;}
+.lsair{text-align:center;color:#7C3AED;font-size:14px;font-weight:500;cursor:pointer;padding:8px;}
+/* Next steps */
+.tpb{display:flex;align-items:center;justify-content:space-between;padding:48px 20px 8px;}
+.nw{position:relative;}
+.nd{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#d946ef;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.nsc{border:1.5px solid #e8e8e8;border-radius:14px;padding:16px;margin-bottom:12px;}
+.stc{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.sto{background:#fff7ed;color:#c2410c;}
+.rec{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:#fdf4ff;color:#a21caf;margin-bottom:10px;}
+.bkns{display:flex;align-items:center;gap:6px;padding:4px 20px 12px;cursor:pointer;color:#7C3AED;font-size:14px;}
+/* Menu */
+.msc{background:#fff;}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:48px 24px 20px;}
+.mdiv{height:1px;background:#f0f0f0;margin:0 24px 8px;}
+.mi{display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid #f8f8f8;cursor:pointer;font-size:16px;color:#333;}
+.miic{font-size:22px;width:28px;text-align:center;}
+.mibg{background:#d946ef;color:#fff;font-size:11px;font-weight:700;border-radius:10px;padding:2px 6px;margin-left:auto;}
+</style>
+<script>
+(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+  a.getElementsByTagName('head')[0].appendChild(s);
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'e3ebd225-77cb-43a7-94d4-a917f067b1da');
+</script>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wvvmy6ck0n");
+</script>
+</head>
+<body>
+<div class="tag">Cenário 1 — Cadastro pelo Sócio</div>
+<div class="device">
+
+<!-- S1: CPF -->
+<div class="screen active" id="s-cpf">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"></div>
+  <div class="body" style="margin-top:32px;">
+    <h1>Acesso MaisTODOS</h1>
+    <p class="sub">Acesse e se conecte as nossas soluções financeiras inteligentes.</p>
+    <label>CPF</label>
+    <input type="text" id="cpf-in" placeholder="000.000.000-00" maxlength="14" inputmode="numeric" pattern="[0-9]*" oninput="fmtCPF(this);chkCPF()">
+  </div>
+  <div class="sp"></div>
+  <div class="ft"><button class="bp" id="cpf-btn" disabled data-maze-id="btn-cpf-acessar" onclick="handleCPF()">Acessar</button></div>
+  <div class="brf"><img src="https://i.imgur.com/yrhadmn.png" style="width:100%;object-fit:contain;"></div>
+  <div class="bs-ov hidden" id="bs-cpf">
+    <div class="bs">
+      <div class="bsh"></div>
+      <div style="font-size:52px;text-align:center;margin-bottom:14px;">👤</div>
+      <p style="font-size:18px;font-weight:700;color:#111;text-align:center;margin-bottom:8px;line-height:1.3;">O CPF inserido já foi cadastrado no nosso sistema</p>
+      <p style="font-size:14px;color:#666;text-align:center;line-height:1.5;margin-bottom:20px;">Acesse com seus CPF e senha ou caso não se lembre utilize a opção recuperar senha</p>
+      <button class="bp" data-maze-id="btn-acessar-com-senha" onclick="goTo('s-senha')">Acessar com minha senha</button>
+      <div style="height:10px;"></div>
+      <button class="bo" data-maze-id="btn-recuperar-senha" onclick="closeBS('bs-cpf')">Recuperar senha</button>
+    </div>
+  </div>
+</div>
+
+<!-- S2: Senha -->
+<div class="screen" id="s-senha">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"></div>
+  <div class="body" style="margin-top:32px;">
+    <h1>Acesso MaisTODOS</h1>
+    <p class="sub">Acesse e se conecte as nossas soluções financeiras inteligentes.</p>
+    <label>Senha</label>
+    <div class="iw">
+      <input type="password" id="senha-in" oninput="chkSenha()">
+      <button class="eye" onclick="togglePwd('senha-in')">👁</button>
+    </div>
+    <button style="color:#7C3AED;font-size:14px;font-weight:500;background:none;border:none;cursor:pointer;text-align:right;width:100%;margin-top:8px;">Esqueci a senha</button>
+  </div>
+  <div class="sp"></div>
+  <div class="ft">
+    <button class="bg" id="acessar-btn">Acessar</button>
+    <p style="text-align:center;font-size:14px;color:#888;">Ainda não tem cadastro?</p>
+    <button class="bo" data-maze-id="btn-cadastrar" onclick="goTo('s-dados')">Cadastrar</button>
+    <button class="bg">Continuar de onde parou</button>
+  </div>
+</div>
+
+<!-- S3: Dados PF -->
+<div class="screen" id="s-dados">
+  <div class="back" data-maze-id="btn-sair" onclick="goTo('s-cpf')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:8px;">
+    <h1>Para começar, precisamos de algumas informações</h1>
+    <p class="sub">Informe os dados abaixo</p>
+    <label>Seu CPF</label><input type="text" value="123.321.123-12" readonly>
+    <label>Nome completo</label><input type="text" id="d1" placeholder="Digite aqui..." oninput="chkDados()">
+    <label>Nome da mãe</label><input type="text" id="d2" placeholder="Digite aqui..." oninput="chkDados()">
+    <label>Data de nascimento</label><input type="text" id="d3" placeholder="dd/mm/aaaa" oninput="chkDados()">
+    <label>E-mail</label><input type="text" id="d4" placeholder="Digite aqui..." oninput="chkDados()">
+    <label>Telefone</label><input type="text" id="d5" placeholder="(xx) xxxxx-xxxx" oninput="chkDados()">
+    <p style="font-size:12px;color:#888;margin-top:16px;line-height:1.5;">Ao continuar, você está de acordo com os <a href="#" style="color:#7C3AED;font-weight:600;">Termos de uso e Política de Privacidade.</a></p>
+  </div>
+  <div class="ft"><button class="bp" id="dados-btn" disabled data-maze-id="btn-dados-continuar" onclick="goTo('s-otp-email')">Continuar</button></div>
+</div>
+
+<!-- S4: OTP Email -->
+<div class="screen" id="s-otp-email">
+  <div class="back" onclick="goTo('s-dados')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:16px;">
+    <div class="oh"><div class="oi">📧</div><div><h2>Confirme seu e-mail</h2><p>enviado para jose@email.com</p></div></div>
+    <div class="or" id="otp-e">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-e')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-e')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-e')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-e')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-e')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpLast(this,'otp-e','otp-e-btn')" onkeydown="otpBk(event,this)">
+    </div>
+    <div class="emsg hidden" id="otp-e-err">O código inserido não é válido, verifique e tente novamente.</div>
+  </div>
+  <div class="sp"></div>
+  <div class="ft">
+    <div class="res"><span>Reenviar em</span><span style="color:#7C3AED;font-weight:600;" id="t-email">03:00</span></div>
+    <button class="bp" id="otp-e-btn" disabled data-maze-id="btn-otp-email-confirmar" onclick="handleOTPEmail()">Confirmar código</button>
+  </div>
+</div>
+
+<!-- S5: OTP Celular -->
+<div class="screen" id="s-otp-cel">
+  <div class="back" onclick="goTo('s-otp-email')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:16px;">
+    <div class="oh"><div class="oi">🔐</div><div><h2>Confirme seu celular</h2><p>enviado por SMS para (16) 91711-1234</p></div></div>
+    <div class="or" id="otp-c">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
+      <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpLast(this,'otp-c','otp-c-btn')" onkeydown="otpBk(event,this)">
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="ft">
+    <div class="res"><span>Reenviar em</span><span style="color:#7C3AED;font-weight:600;" id="t-cel">03:00</span></div>
+    <button class="bp" id="otp-c-btn" disabled data-maze-id="btn-otp-cel-confirmar" onclick="goTo('s-doc')">Confirmar código</button>
+  </div>
+</div>
+
+<!-- S6: Selecionar documento -->
+<div class="screen" id="s-doc">
+  <div class="back" onclick="goTo('s-otp-cel')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="font-size:34px;">📱</span><div><div style="font-size:18px;font-weight:700;color:#111;">Validação de identidade</div><div style="font-size:13px;color:#666;line-height:1.4;">Agora vamos garantir a sua identidade para um cadastro confiável e seguro</div></div></div>
+    <p style="font-size:14px;font-weight:600;color:#333;margin-bottom:12px;">Selecione o tipo de documento</p>
+    <div class="ro" id="opt-rg" data-maze-id="btn-selecionar-rg" onclick="selDoc('rg')"><div class="rc" id="rc-rg"></div>RG</div>
+    <div class="ro" id="opt-cnh" data-maze-id="btn-selecionar-cnh" onclick="selDoc('cnh')"><div class="rc" id="rc-cnh"></div>CNH</div>
+    <div id="doc-tips" class="hidden" style="margin-top:16px;">
+      <p style="font-size:14px;font-weight:600;color:#333;margin-bottom:12px;">Siga nossas dicas</p>
+      <div class="ti"><span>☀️</span>Procure um local iluminado.</div>
+      <div class="ti"><span>📷</span>Retire o documento do plástico.</div>
+      <div class="ti"><span>🪪</span>Fotografe um lado de cada vez.</div>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="ft"><button class="bp" id="doc-btn" disabled data-maze-id="btn-ir-validacao" onclick="goTo('s-perm')">Ir para validação</button></div>
+</div>
+
+<!-- S7: Permissão câmera -->
+<div class="screen" id="s-perm" style="background:#000;">
+  <div style="flex:1;background:#000;"></div>
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+    <div style="background:#f5f5f5;border-radius:14px;width:270px;overflow:hidden;text-align:center;">
+      <p style="font-size:14px;font-weight:600;padding:18px 16px 8px;color:#111;">MaisTodos deseja ter acesso à câmera</p>
+      <button style="display:block;width:100%;padding:13px;font-size:16px;color:#007AFF;border:none;background:none;cursor:pointer;border-top:.5px solid #ccc;" data-maze-id="btn-permitir-camera" onclick="goTo('s-cam-f')">Permitir</button>
+      <button style="display:block;width:100%;padding:13px;font-size:16px;color:#007AFF;border:none;background:none;cursor:pointer;border-top:.5px solid #ccc;" onclick="goTo('s-doc')">Não permitir</button>
+    </div>
+  </div>
+</div>
+
+<!-- S8: Câmera frente -->
+<div class="screen csc" id="s-cam-f">
+  <div class="chd"><button class="cx" onclick="goTo('s-doc')">✕</button><span>Frente do documento</span><div style="width:28px;"></div></div>
+  <div class="cbd"><div class="fnd"><div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div><div class="cdot"></div></div><div class="ctp">Use o botão abaixo para capturar</div></div>
+  <div class="cft"><button class="sht" data-maze-id="btn-capturar-frente" onclick="goTo('s-rev-f')"></button></div>
+</div>
+
+<!-- S9: Review frente -->
+<div class="screen" id="s-rev-f">
+  <div class="back" onclick="goTo('s-cam-f')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:16px;">
+    <div class="pf">📄 Frente capturada</div>
+    <h1 style="text-align:center;">A foto ficou boa?</h1>
+    <p class="sub" style="text-align:center;">O documento precisa estar nítido e legível.</p>
+  </div>
+  <div class="sp"></div>
+  <div class="ft"><button class="bp" data-maze-id="btn-continuar-frente" onclick="goTo('s-cam-v')">Sim, continuar</button><button class="bo" onclick="goTo('s-cam-f')">Refazer foto</button></div>
+</div>
+
+<!-- S10: Câmera verso -->
+<div class="screen csc" id="s-cam-v">
+  <div class="chd"><button class="cx" onclick="goTo('s-doc')">✕</button><span>Verso do documento</span><div style="width:28px;"></div></div>
+  <div class="cbd"><div class="fnd"><div class="co tl"></div><div class="co tr"></div><div class="co bl"></div><div class="co br"></div><div class="cdot"></div></div><div class="ctp">Use o botão abaixo para capturar</div></div>
+  <div class="cft"><button class="sht" data-maze-id="btn-capturar-verso" onclick="goTo('s-rev-v')"></button></div>
+</div>
+
+<!-- S11: Review verso -->
+<div class="screen" id="s-rev-v">
+  <div class="back" onclick="goTo('s-cam-v')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:16px;">
+    <div class="pf">📄 Verso capturado</div>
+    <h1 style="text-align:center;">A foto ficou boa?</h1>
+    <p class="sub" style="text-align:center;">O documento precisa estar nítido e legível.</p>
+  </div>
+  <div class="sp"></div>
+  <div class="ft"><button class="bp" data-maze-id="btn-continuar-verso" onclick="goTo('s-selfie-dicas')">Sim, continuar</button><button class="bo" onclick="goTo('s-cam-v')">Refazer foto</button></div>
+</div>
+
+<!-- S12: Dicas selfie -->
+<div class="screen" id="s-selfie-dicas">
+  <div class="back" onclick="goTo('s-rev-v')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:8px;">
+    <h1>Agora é hora de tirar a selfie</h1>
+    <p class="sub">Veja nossas dicas para garantir que tudo corra bem</p>
+    <div style="width:100%;height:220px;background:#1a1a1a;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:60px;">🧑</div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:14px;"><div style="width:8px;height:8px;border-radius:50%;background:#7C3AED;"></div><div style="width:8px;height:8px;border-radius:50%;background:#ddd;"></div><div style="width:8px;height:8px;border-radius:50%;background:#ddd;"></div></div>
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <div style="width:24px;height:24px;border-radius:50%;background:#7C3AED;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+      <div><div style="font-size:15px;font-weight:700;color:#111;margin-bottom:4px;">Ache um lugar bem claro e com fundo simples.</div><div style="font-size:13px;color:#666;line-height:1.5;">Fique de frente para a luz e sem coisas ou pessoas atrás de você.</div></div>
+    </div>
+  </div>
+  <div class="ft"><button class="bp" id="btn-selfie" data-maze-id="btn-selfie-continuar" onclick="window.open('https://alexandrelemos-create.github.io/bankly/','_blank')">Continuar</button></div>
+</div>
+
+<!-- S13: Unico intro -->
+<div class="screen usc" id="s-unico-intro">
+  <div class="ub">🔒 Ambiente seguro</div>
+  <div class="ubd">
+    <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:12px;letter-spacing:-.5px;">bânkly</div>
+    <h2 style="font-size:20px;font-weight:700;color:#111;margin-bottom:12px;text-align:center;">Verifique sua identidade com a Unico</h2>
+    <p style="font-size:14px;color:#555;line-height:1.5;text-align:center;margin-bottom:24px;">A Unico protege a identidade de milhões de pessoas. <strong>MÉLIUZ</strong> utiliza Unico para verificar se você é realmente você.</p>
+    <button class="bd" data-maze-id="btn-verificar-unico" onclick="goTo('s-unico-selfie')">Verificar com a Unico</button>
+  </div>
+  <div style="padding:0 24px 24px;text-align:center;"><p style="font-size:12px;color:#aaa;">Ao continuar, você aceita <a href="#" style="color:#555;text-decoration:underline;">Política de Privacidade</a> da Unico.</p><p style="font-size:13px;font-weight:600;color:#888;margin-top:8px;">unico</p></div>
+</div>
+
+<!-- S14: Unico selfie -->
+<div class="screen usc" id="s-unico-selfie">
+  <div class="ub"><button onclick="goTo('s-unico-intro')" style="background:none;border:none;cursor:pointer;font-size:18px;color:#333;">←</button><span style="flex:1;text-align:center;font-size:16px;font-weight:700;color:#111;letter-spacing:-.3px;">bânkly</span><div style="width:28px;"></div></div>
+  <div class="ubd">
+    <h2 style="font-size:20px;font-weight:700;color:#111;margin-bottom:8px;">Tire uma selfie</h2>
+    <p style="font-size:14px;color:#666;margin-bottom:40px;">Vamos verificar sua identidade.</p>
+    <div style="width:100px;height:100px;border:2px dashed #ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 40px;font-size:40px;">🙂</div>
+    <button class="bd" data-maze-id="btn-tirar-selfie" onclick="goTo('s-unico-loading')">Tirar selfie</button>
+    <p style="font-size:13px;font-weight:600;color:#aaa;margin-top:12px;">unico</p>
+  </div>
+</div>
+
+<!-- S15: Unico loading -->
+<div class="screen usc" id="s-unico-loading">
+  <div class="ubd">
+    <div style="font-size:32px;color:#aaa;margin-bottom:16px;">🎥</div>
+    <div class="sk" style="width:120px;height:6px;margin:0 auto 16px;"></div>
+    <p style="font-size:14px;color:#888;">Aguarde, estamos preparando para você tirar a selfie.</p>
+    <button data-maze-id="btn-unico-avancar" onclick="goTo('s-unico-pronto')" style="margin-top:40px;background:none;border:none;color:#7C3AED;cursor:pointer;font-size:13px;">Avançar →</button>
+  </div>
+</div>
+
+<!-- S16: Unico pronto -->
+<div class="screen usc" id="s-unico-pronto">
+  <div style="display:flex;align-items:center;gap:10px;padding:48px 20px 8px;"><button onclick="goTo('s-unico-selfie')" style="background:none;border:none;cursor:pointer;font-size:20px;color:#333;">✕</button><span style="font-size:13px;color:#555;">Vamos lá, prepare-se para a selfie</span></div>
+  <p style="font-size:12px;color:#aaa;padding:0 20px 16px;">Enquadre seu rosto na marcação e pressione o botão abaixo</p>
+  <div style="display:flex;justify-content:center;margin-bottom:20px;"><div style="width:150px;height:180px;border:2px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:80px;">🧔</div></div>
+  <div style="padding:0 40px;"><button class="bd" data-maze-id="btn-estou-pronto" onclick="goTo('s-unico-verif')">Estou pronto</button></div>
+</div>
+
+<!-- S17: Unico verificando -->
+<div class="screen usc" id="s-unico-verif">
+  <div class="ubd">
+    <div style="font-size:40px;color:#aaa;margin-bottom:16px;">🙂</div>
+    <div class="sk" style="width:160px;height:6px;margin:0 auto 8px;"></div>
+    <div class="sk" style="width:100px;height:6px;margin:0 auto 16px;"></div>
+    <p style="font-size:14px;color:#888;">Não feche esta tela, estamos verificando sua selfie.</p>
+    <button data-maze-id="btn-unico-verificando-avancar" onclick="goTo('s-unico-ok')" style="margin-top:40px;background:none;border:none;color:#7C3AED;cursor:pointer;font-size:13px;">Avançar →</button>
+  </div>
+</div>
+
+<!-- S18: Unico OK -->
+<div class="screen usc" id="s-unico-ok">
+  <div class="ub">🔒 Ambiente seguro</div>
+  <div class="ubd">
+    <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:20px;letter-spacing:-.5px;">bânkly</div>
+    <h2 style="font-size:20px;font-weight:700;color:#111;margin-bottom:8px;">Solicitação finalizada!</h2>
+    <p style="font-size:14px;color:#666;">Você já pode fechar esta janela.</p>
+  </div>
+  <div style="padding:0 24px 24px;text-align:center;"><p style="font-size:13px;font-weight:600;color:#aaa;">unico</p></div>
+  <div style="padding:0 24px 36px;"><button class="bp" data-maze-id="btn-unico-concluido" onclick="goTo('s-senha-criar')">Continuar</button></div>
+</div>
+
+<!-- S19: Criar senha -->
+<div class="screen" id="s-senha-criar">
+  <div class="back" onclick="goTo('s-unico-ok')"><svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>Voltar</div>
+  <div class="body" style="margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="font-size:36px;">🔐</span><div><div style="font-size:18px;font-weight:700;color:#111;">Agora crie sua senha</div><div style="font-size:13px;color:#666;">Lembre-se dela para acessar sua conta</div></div></div>
+    <label style="margin-top:0;">Crie uma senha</label>
+    <div class="iw"><input type="password" id="pw1" oninput="chkPwd()"><button class="eye" onclick="togglePwd('pw1')">👁</button></div>
+    <div class="pwr">
+      <div class="pr" id="r-len"><div class="ri">○</div>8 caracteres ou mais</div>
+      <div class="pr" id="r-num"><div class="ri">○</div>1 número</div>
+      <div class="pr" id="r-spc"><div class="ri">○</div>1 caractere especial (exemplo: @, !, $, #)</div>
+      <div class="pr" id="r-upp"><div class="ri">○</div>1 letra maiúscula</div>
+      <div class="pr" id="r-low"><div class="ri">○</div>1 letra minúscula</div>
+    </div>
+    <label>Confirme a senha</label>
+    <div class="iw"><input type="password" id="pw2" oninput="chkPwd()"><button class="eye" onclick="togglePwd('pw2')">👁</button></div>
+  </div>
+  <div class="ft"><button class="bp" id="pwd-btn" disabled data-maze-id="btn-senha-continuar" onclick="goTo('s-cadastrar-estab')">Continuar</button></div>
+</div>
+
+<!-- S20: Loading empresas -->
+<div class="screen" id="s-loading-emp">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button class="av">👤</button></div></div>
+  <div style="padding:50px 24px 0;text-align:center;">
+    <p style="font-size:14px;color:#888;margin-bottom:24px;">Aguarde enquanto buscamos empresas relacionadas ao seu CPF</p>
+    <div class="sk" style="height:80px;margin-bottom:12px;border-radius:16px;"></div>
+    <div class="sk" style="height:80px;border-radius:16px;"></div>
+  </div>
+</div>
+
+<!-- S21: Cadastrar estabelecimento -->
+<div class="screen" id="s-cadastrar-estab">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button class="av">👤</button></div></div>
+  <div style="height:1px;background:#eee;"></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;">
+    <img src="https://em-content.zobj.net/source/apple/391/convenience-store_1f3ea.png" style="width:140px;height:140px;object-fit:contain;margin-bottom:28px;" onerror="this.style.fontSize='80px';this.outerHTML='<div style=\'font-size:80px;margin-bottom:28px;\'>🏪</div>'">
+    <h1 style="font-size:22px;font-weight:700;color:#111;line-height:1.3;margin-bottom:10px;">Agora você já pode cadastrar um estabelecimento</h1>
+    <p style="font-size:15px;color:#888;line-height:1.5;">Falta pouco para você impulsionar as suas vendas</p>
+  </div>
+  <div class="ft">
+    <button class="bp" data-maze-id="btn-cadastrar-estabelecimento" onclick="goTo('s-loading-emp')">Cadastrar meu estabelecimento</button>
+  </div>
+</div>
+
+<!-- S22: Gestão -->
+<div class="screen" id="s-gestao">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;" data-maze-id="btn-abrir-menu" onclick="goTo('s-menu')">👤</button></div></div>
+  <div style="padding:16px 16px 0;"><h1 style="margin-bottom:12px;">Cadastre e gerencie parcerias</h1></div>
+  <div class="fb">
+    <div class="ch" style="display:flex;align-items:center;gap:4px;">🔍 Buscar</div>
+    <div class="ch active">Todos os cadastros</div>
+  </div>
+  <div>
+    <div class="cr" data-maze-id="btn-cadastrar-empresa" onclick="goTo('s-dados-emp')">
+      <div class="ci" style="background:#fff3f3;">⏰</div>
+      <div><div class="cn">Tech Solutions Ltda</div><div class="cc">12.123.321/0001-12</div></div>
+      <div class="cb2">Cadastro</div><span style="color:#bbb;font-size:20px;">›</span>
+    </div>
+    <div class="cr">
+      <div class="ci" style="background:#fff3f3;">⏰</div>
+      <div><div class="cn">Matita Perê Ltda</div><div class="cc">12.123.321/0001-12</div></div>
+      <div class="cb2">Cadastro</div><span style="color:#bbb;font-size:20px;">›</span>
+    </div>
+    <div class="cr" onclick="goTo('s-next-cashback')">
+      <div class="ci" style="background:#f0fdf4;font-size:18px;">✅</div>
+      <div><div class="cn">Empresa de produtos...</div><div class="cc">12.123.321/0001-12</div></div>
+      <div class="cb2" style="background:#f0fdf4;color:#16a34a;">Habilitada</div><span style="color:#bbb;font-size:20px;">›</span>
+    </div>
+    <div class="cr" onclick="goTo('s-next-cashback')">
+      <div class="ci" style="background:#f0fdf4;font-size:18px;">✅</div>
+      <div><div class="cn">Comércio e serviços...</div><div class="cc">12.123.321/0001-12</div></div>
+      <div class="cb2" style="background:#f0fdf4;color:#16a34a;">Habilitada</div><span style="color:#bbb;font-size:20px;">›</span>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="brf">
+    <p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">Marcas falando com <strong style="color:#7C3AED;">15 milhões de consumidores</strong> no app Cartão de Todos</p>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="https://i.imgur.com/Q6XKZMH.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+      <img src="https://i.imgur.com/cqNnTPd.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+    </div>
+  </div>
+  <button class="fab" data-maze-id="btn-adicionar-empresa" onclick="showAE()">+</button>
+</div>
+
+<!-- S-next-cashback: Próximos passos — Cashback -->
+<div class="screen" id="s-next-cashback">
+  <div class="tpb">
+    <button style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;" onclick="goTo('s-menu')">☰</button>
+    <img src="https://i.imgur.com/K726fWY.png" style="height:28px;object-fit:contain;">
+    <div style="display:flex;gap:14px;align-items:center;"><div class="nw"><span style="font-size:22px;">🔔</span><div class="nd">+9</div></div><button style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;">👤</button></div>
+  </div>
+  <div class="bkns" onclick="goTo('s-gestao')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg><div><div style="font-size:11px;color:#888;">Próximos passos na nossa parceria</div><div style="font-size:15px;font-weight:700;color:#111;">Tech Solutions Ltda</div></div></div>
+  <div class="body" style="padding-top:4px;">
+    <div class="nsc">
+      <span class="rec">💙 Recomendado para você</span>
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-top:4px;">
+        <span style="font-size:40px;flex-shrink:0;">📱</span>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:6px;line-height:1.3;">Cashback App Cartão de Todos</div>
+          <div style="font-size:13px;color:#666;line-height:1.5;">Chegou a hora de sua marca aparecer no app Cartão de Todos ao lado das maiores empresas do Brasil.</div>
+          <div style="margin-top:10px;font-size:13px;font-weight:600;color:#7C3AED;cursor:pointer;">Configurar →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="brf">
+    <p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">Marcas falando com <strong style="color:#7C3AED;">15 milhões de consumidores</strong> no app Cartão de Todos</p>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="https://i.imgur.com/Q6XKZMH.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+      <img src="https://i.imgur.com/cqNnTPd.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+    </div>
+  </div>
+</div>
+
+<!-- S-AE: Adicionar empresa (tela cheia) -->
+<div class="screen" id="ae-sheet">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;">
+    <span style="font-size:20px;font-weight:700;color:#111;">Adicione uma empresa</span>
+    <button class="aex" data-maze-id="btn-fechar-ae" onclick="goTo('s-gestao')">✕</button>
+  </div>
+  <div style="height:1px;background:#e8e8e8;"></div>
+  <div style="padding:20px 20px 0;flex:1;overflow-y:auto;">
+    <p class="aes" style="padding:0 0 6px;">Encontramos 2 empresas com o seu CPF</p>
+    <div class="ecr" data-maze-id="btn-selecionar-emp1" onclick="toggleEmp('ck1')"><div class="ck" id="ck1"></div><div><div style="font-size:15px;font-weight:500;color:#111;">Tech Solutions Ltda</div><div style="font-size:12px;color:#888;">CNPJ: 00.000.000/0001-00</div></div></div>
+    <div class="ecr" data-maze-id="btn-selecionar-emp2" onclick="toggleEmp('ck2')"><div class="ck" id="ck2"></div><div><div style="font-size:15px;font-weight:500;color:#111;">Matita Perê Ltda</div><div style="font-size:12px;color:#888;">CNPJ: 00.000.000/0001-00</div></div></div>
+    <div class="bsr" data-maze-id="btn-buscar-cnpj" onclick="goTo('s-cnpj')" style="border-radius:12px;"><span style="font-size:16px;">🔍</span><span>Buscar por CNPJ</span></div>
+    <div id="emp-add" class="hidden">
+      <div class="ecr"><div class="ck on">✓</div><div><div style="font-size:15px;font-weight:500;color:#111;">Empresa de Produtos Ltda</div><div style="font-size:12px;color:#888;">CNPJ: 00.000.000/0001-00</div></div></div>
+    </div>
+  </div>
+  <div class="ft hidden" id="ae-ft"><button class="bp" onclick="cadastrarEmpresa()">Cadastrar empresa</button></div>
+</div>
+
+<!-- S22: Busca CNPJ -->
+<div class="screen" id="s-cnpj" style="justify-content:flex-end;background:rgba(0,0,0,.3);">
+  <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;animation:su .25s ease;">
+    <div style="padding:20px 20px 0;">
+      <p style="font-size:15px;font-weight:600;color:#111;margin-bottom:12px;">Busque por CNPJ e adicione uma ou mais empresas para iniciar o cadastro</p>
+      <label style="margin-top:0;">CNPJ da empresa</label>
+      <input type="text" id="cnpj-in" placeholder="00.000.000/0001-00" style="margin-bottom:12px;">
+      <button class="bp" data-maze-id="btn-verificar-cnpj" onclick="addCNPJ()">Verificar CNPJ</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #e8e8e8;margin-top:12px;">
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('1')">1</div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('2')">2<span style="display:block;font-size:10px;color:#aaa;">ABC</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('3')">3<span style="display:block;font-size:10px;color:#aaa;">DEF</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('4')">4<span style="display:block;font-size:10px;color:#aaa;">GHI</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('5')">5<span style="display:block;font-size:10px;color:#aaa;">JKL</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('6')">6<span style="display:block;font-size:10px;color:#aaa;">MNO</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('7')">7<span style="display:block;font-size:10px;color:#aaa;">PQRS</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('8')">8<span style="display:block;font-size:10px;color:#aaa;">TUV</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-bottom:1px solid #e8e8e8;font-size:20px;" onclick="np('9')">9<span style="display:block;font-size:10px;color:#aaa;">WXYZ</span></div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;font-size:14px;color:#555;" onclick="np('+*#')">+*#</div>
+      <div style="padding:16px;text-align:center;cursor:pointer;border-right:1px solid #e8e8e8;font-size:20px;" onclick="np('0')">0</div>
+      <div style="padding:16px;text-align:center;cursor:pointer;font-size:20px;color:#555;" onclick="np('del')">⌫</div>
+    </div>
+  </div>
+</div>
+
+<!-- S23: Dados empresa (1/2) -->
+<div class="screen" id="s-dados-emp">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button class="av">👤</button></div></div>
+  <div class="body" style="margin-top:8px;">
+    <div style="margin-bottom:4px;font-size:15px;font-weight:700;color:#111;">Tech Solutions Ltda</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;">12.123.123/0001-12</div>
+    <div class="pc"><div class="sb" style="border-color:#7C3AED;color:#7C3AED;">1/2</div><div><div style="font-size:15px;font-weight:700;color:#7C3AED;">Dados empresariais</div><div style="font-size:12px;color:#888;">Em andamento...</div></div></div>
+
+    <!-- Dados de contato da empresa -->
+    <div class="sc"><h3>Dados de contato da empresa</h3>
+      <label style="margin-top:0;">Telefone comercial</label><input type="text" placeholder="Digite aqui...">
+      <label>E-mail comercial</label><input type="text" placeholder="Digite aqui...">
+    </div>
+
+    <!-- Alerta dados incompletos -->
+    <div class="ab"><span style="font-size:18px;">⚠️</span><p>Identificamos algumas informações de sócios com dados incompletos. Preencha os dados abaixo para prosseguir.</p></div>
+
+    <!-- Dados incompletos do sócio -->
+    <div class="sc"><h3>Dados incompletos do sócio</h3>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><div class="sav">CS</div><div><div style="font-size:15px;font-weight:600;color:#111;">Carlos Souza</div><div style="font-size:12px;color:#888;">Sócio da empresa</div></div></div>
+      <label style="margin-top:0;">Nome da mãe</label><input type="text" placeholder="Digite aqui...">
+      <label>Telefone</label><input type="text" placeholder="Digite aqui...">
+      <label>E-mail</label><input type="text" placeholder="Digite aqui...">
+    </div>
+
+    <!-- Info box azul -->
+    <div style="display:flex;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px;margin-bottom:12px;">
+      <span style="font-size:18px;flex-shrink:0;">ℹ️</span>
+      <p style="font-size:13px;color:#1e40af;line-height:1.4;">Seu CPF não está no quadro societário desta empresa. Apenas sócios podem aprovar o cadastro de dados.</p>
+    </div>
+
+    <!-- Selecione o sócio da empresa -->
+    <div class="sc" style="padding-bottom:8px;">
+      <h3 style="margin-bottom:4px;">Selecione o sócio da empresa</h3>
+      <p style="font-size:13px;color:#888;margin-bottom:12px;">O sócio aprova os dados cadastrados por você</p>
+
+      <!-- Carlos Souza — sem seleção por padrão -->
+      <div id="socio-cs" style="border:1.5px solid #e0e0e0;border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer;" onclick="toggleSocio('cs')">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+          <div id="radio-cs" style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;"></div>
+          <span style="font-size:15px;font-weight:500;color:#111;">Carlos Souza</span>
+        </div>
+        <div id="socio-cs-detail" style="display:none;padding:0 14px 14px;border-top:1px solid #ede9fe;">
+          <div style="font-size:13px;color:#555;margin-top:10px;margin-bottom:2px;">c*******@****.com</div>
+          <div style="font-size:12px;color:#aaa;margin-bottom:10px;">(47) 9****-****</div>
+          <label style="font-size:12px;color:#444;margin-bottom:4px;display:block;margin-top:0;">E-mail do sócio ou representante</label>
+          <input type="text" placeholder="carlos@minha.com" style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;font-size:14px;color:#111;background:#fff;outline:none;" onclick="event.stopPropagation()">
+          <p style="font-size:11px;color:#aaa;margin-top:4px;line-height:1.4;">Confirme o e-mail preferencial do sócio para envio do link de aprovação de cadastro.</p>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+            <div style="background:#ede9fe;border-radius:20px;padding:4px 10px;font-size:12px;color:#7C3AED;font-weight:500;">Tech Solutions Ltda</div>
+            <div style="background:#ede9fe;border-radius:20px;padding:4px 10px;font-size:12px;color:#7C3AED;font-weight:500;">Madeiref Ltda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bruno Fagundes -->
+      <div id="socio-bf" style="border:1.5px solid #e0e0e0;border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer;" onclick="toggleSocio('bf')">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+          <div id="radio-bf" style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;"></div>
+          <span style="font-size:15px;font-weight:500;color:#111;">Bruno Fagundes</span>
+        </div>
+        <div id="socio-bf-detail" style="display:none;padding:0 14px 14px;border-top:1px solid #f0f0f0;">
+          <div style="font-size:13px;color:#555;margin-top:10px;margin-bottom:2px;">b*******@****.com</div>
+          <div style="font-size:12px;color:#aaa;margin-bottom:10px;">(11) 9****-****</div>
+          <label style="font-size:12px;color:#444;margin-bottom:4px;display:block;margin-top:0;">E-mail do sócio ou representante</label>
+          <input type="text" placeholder="bruno@minha.com" style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;font-size:14px;color:#111;background:#fff;outline:none;" onclick="event.stopPropagation()">
+          <p style="font-size:11px;color:#aaa;margin-top:4px;line-height:1.4;">Confirme o e-mail preferencial do sócio para envio do link de aprovação de cadastro.</p>
+        </div>
+      </div>
+
+      <!-- Paulo Silva -->
+      <div id="socio-ps" style="border:1.5px solid #e0e0e0;border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer;" onclick="toggleSocio('ps')">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+          <div id="radio-ps" style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;"></div>
+          <span style="font-size:15px;font-weight:500;color:#111;">Paulo Silva</span>
+        </div>
+        <div id="socio-ps-detail" style="display:none;padding:0 14px 14px;border-top:1px solid #f0f0f0;">
+          <div style="font-size:13px;color:#555;margin-top:10px;margin-bottom:2px;">p*******@****.com</div>
+          <div style="font-size:12px;color:#aaa;margin-bottom:10px;">(21) 9****-****</div>
+          <label style="font-size:12px;color:#444;margin-bottom:4px;display:block;margin-top:0;">E-mail do sócio ou representante</label>
+          <input type="text" placeholder="paulo@minha.com" style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;font-size:14px;color:#111;background:#fff;outline:none;" onclick="event.stopPropagation()">
+          <p style="font-size:11px;color:#aaa;margin-top:4px;line-height:1.4;">Confirme o e-mail preferencial do sócio para envio do link de aprovação de cadastro.</p>
+        </div>
+      </div>
+
+      <!-- Maria Aparecida -->
+      <div id="socio-ma" style="border:1.5px solid #e0e0e0;border-radius:12px;margin-bottom:4px;overflow:hidden;cursor:pointer;" onclick="toggleSocio('ma')">
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+          <div id="radio-ma" style="width:20px;height:20px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;"></div>
+          <span style="font-size:15px;font-weight:500;color:#111;">Maria Aparecida</span>
+        </div>
+        <div id="socio-ma-detail" style="display:none;padding:0 14px 14px;border-top:1px solid #f0f0f0;">
+          <div style="font-size:13px;color:#555;margin-top:10px;margin-bottom:2px;">m*******@****.com</div>
+          <div style="font-size:12px;color:#aaa;margin-bottom:10px;">(85) 9****-****</div>
+          <label style="font-size:12px;color:#444;margin-bottom:4px;display:block;margin-top:0;">E-mail do sócio ou representante</label>
+          <input type="text" placeholder="maria@minha.com" style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:10px 12px;font-size:14px;color:#111;background:#fff;outline:none;" onclick="event.stopPropagation()">
+          <p style="font-size:11px;color:#aaa;margin-top:4px;line-height:1.4;">Confirme o e-mail preferencial do sócio para envio do link de aprovação de cadastro.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ft"><button class="bp" data-maze-id="btn-dados-emp-continuar" onclick="goTo('s-docs-emp')">Continuar</button><div class="lsair">Sair</div></div>
+</div>
+
+<!-- S24: Documentos empresa (2/2) -->
+<div class="screen" id="s-docs-emp">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button class="av">👤</button></div></div>
+  <div class="body" style="margin-top:8px;">
+    <div style="margin-bottom:4px;font-size:15px;font-weight:700;color:#111;">Tech Solutions Ltda</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;">12.123.123/0001-12</div>
+    <div class="pc"><div class="sb" style="border-color:#7C3AED;color:#7C3AED;">2/2</div><div><div style="font-size:15px;font-weight:700;color:#7C3AED;">Documentos da empresa</div><div style="font-size:12px;color:#888;">Em andamento...</div></div></div>
+    <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Contrato social</div><span style="color:#bbb;">ℹ</span></div>
+      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+    </div>
+    <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Comprovante de endereço</div><span style="color:#bbb;">ℹ</span></div>
+      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="ckr" onclick="toggleCk('ckb','decl-end')"><div class="cks" id="ckb"></div><span style="font-size:13px;color:#555;">Não tenho comprovante. Quero utilizar uma declaração de endereço.</span></div>
+      <div id="decl-end" class="hidden dstps">
+        <div style="font-size:13px;font-weight:600;color:#111;margin-top:4px;">Como fazer a declaração de endereço</div>
+        <div class="dst"><div class="dnum">1</div><span>Acesse o modelo e preencha com seus dados.</span></div>
+        <div class="dst"><div class="dnum">2</div><span>Siga as instruções para carregamento de documentos.</span></div>
+        <div class="dst"><div class="dnum">3</div><span>Efetue a assinatura digital da declaração.</span></div>
+        <div class="dst"><div class="dnum">4</div><span>Aguarde o recebimento do documento oficial no seu e-mail cadastrado na Plataforma MaisTodos e também no WhatsApp.</span></div>
+        <div class="dst"><div class="dnum">5</div><span>Após o recebimento, baixe o documento e carregue no campo de comprovante de endereço.</span></div>
+      </div>
+    </div>
+    <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Última alteração contratual</div><span style="color:#bbb;">ℹ</span></div>
+      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="ckr" onclick="toggleCk('ckc',null)"><div class="cks" id="ckc"></div><span style="font-size:13px;color:#555;">Minha empresa não realizou alteração contratual nem eleição de novo representante legal.</span></div>
+    </div>
+  </div>
+  <div class="ft"><button class="bp" data-maze-id="btn-docs-continuar" onclick="goTo('s-banco')">Continuar</button><button class="bo" onclick="goTo('s-dados-emp')">Voltar</button></div>
+</div>
+
+<!-- S25: Conta bancária (3/3) -->
+<div class="screen" id="s-banco">
+  <div class="logo"><img src="https://i.imgur.com/K726fWY.png" style="height:32px;object-fit:contain;"><div class="mla"><button class="av">👤</button></div></div>
+  <div class="body" style="margin-top:8px;">
+    <div style="margin-bottom:4px;font-size:15px;font-weight:700;color:#111;">Tech Solutions Ltda</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;">12.123.123/0001-12</div>
+    <div class="pc"><div class="sb" style="border-color:#7C3AED;color:#7C3AED;">3/3</div><div><div style="font-size:15px;font-weight:700;color:#7C3AED;">Conta bancária</div><div style="font-size:12px;color:#888;">Em andamento...</div></div></div>
+    <div class="sc"><h3>Dados bancários</h3>
+      <label style="margin-top:0;">Banco</label><div class="sf"><span>Selecione o banco</span><span>∨</span></div>
+      <label>Tipo da conta</label><div class="sf"><span>Selecione o tipo</span><span>∨</span></div>
+      <label>Agência</label><input type="text" placeholder="Digite o número da agência"><div style="font-size:11px;color:#aaa;margin-top:3px;">Inclua o dígito se houver</div>
+      <label>Conta</label><input type="text" placeholder="Digite o número da conta"><div style="font-size:11px;color:#aaa;margin-top:3px;">Inclua o dígito se houver</div>
+    </div>
+    <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Comprovante bancário</div><span style="color:#bbb;">ℹ</span></div>
+      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+    </div>
+  </div>
+  <div class="ft"><button class="bp" data-maze-id="btn-banco-continuar" onclick="goTo('s-next')">Continuar</button><button class="bo" onclick="goTo('s-docs-emp')">Voltar</button></div>
+</div>
+
+<!-- S26: Próximos passos -->
+<div class="screen" id="s-next">
+  <div class="tpb">
+    <button style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;" onclick="goTo('s-menu')">☰</button>
+    <img src="https://i.imgur.com/K726fWY.png" style="height:28px;object-fit:contain;">
+    <div style="display:flex;gap:14px;align-items:center;"><div class="nw"><span style="font-size:22px;">🔔</span><div class="nd">+9</div></div><button class="av" style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;">👤</button></div>
+  </div>
+  <div class="bkns" data-maze-id="btn-voltar-gestao" onclick="goTo('s-gestao')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg><div><div style="font-size:11px;color:#888;">Próximos passos na nossa parceria</div><div style="font-size:15px;font-weight:700;color:#111;">Tech Solutions Ltda</div></div></div>
+  <div class="body" style="padding-top:4px;">
+    <div class="nsc">
+      <span class="stc" style="background:#f3f0ff;color:#6b21a8;">● Aguardando liberação</span>
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-top:4px;">
+        <img src="https://i.imgur.com/0y0tj4Y.png" onerror="this.style.fontSize='32px';this.outerHTML='<span style=\'font-size:36px;\'>📋</span>'" style="width:52px;height:52px;object-fit:contain;flex-shrink:0;">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:6px;line-height:1.3;">Pendente validação por sócio</div>
+          <div style="font-size:13px;color:#666;line-height:1.5;">É necessário aprovação do cadastro realizado por um sócio ou representante legalmente autorizado.</div>
+          <div style="margin-top:10px;font-size:13px;font-weight:600;color:#7C3AED;cursor:pointer;">Saiba mais →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="brf">
+    <p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">Marcas falando com <strong style="color:#7C3AED;">15 milhões de consumidores</strong> no app Cartão de Todos</p>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <img src="https://i.imgur.com/Q6XKZMH.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+      <img src="https://i.imgur.com/cqNnTPd.png" onerror="this.style.display='none'" style="height:28px;object-fit:contain;opacity:0.7;">
+    </div>
+  </div>
+</div>
+
+<!-- S27: Menu -->
+<div class="screen msc" id="s-menu">
+  <div class="mhd">
+    <img src="https://i.imgur.com/IEcJXSB.png" style="height:36px;object-fit:contain;">
+    <button style="background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;" onclick="goTo('s-next')">✕</button>
+  </div>
+  <div class="mdiv"></div>
+  <div class="mi"><span class="miic">🔔</span>Notificações<span class="mibg">+9</span></div>
+  <div class="mi"><span class="miic">🏪</span>Empresas</div>
+  <div class="mi" onclick="goTo('s-cpf')"><span class="miic">🚪</span>Sair</div>
+</div>
+
+</div>
+
+<script>
+var tmrs={};
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  try{history.pushState(null,null,'#'+id);}catch(e){}
+  if(id==='s-loading-emp') setTimeout(()=>goTo('ae-sheet'),2000);
+  if(id==='s-otp-email') startTimer('t-email',180);
+  if(id==='s-otp-cel') startTimer('t-cel',180);
+}
+function closeBS(id){document.getElementById(id).classList.add('hidden');}
+function fmtCPF(el){let v=el.value.replace(/\D/g,'').slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');el.value=v;}
+function chkCPF(){document.getElementById('cpf-btn').disabled=document.getElementById('cpf-in').value.replace(/\D/g,'').length<11;}
+function handleCPF(){goTo('s-dados');}
+function chkSenha(){document.getElementById('acessar-btn').disabled=!document.getElementById('senha-in').value;}
+function togglePwd(id){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';}
+function chkDados(){const fs=['d1','d2','d3','d4','d5'];document.getElementById('dados-btn').disabled=!fs.every(f=>document.getElementById(f).value.trim());}
+function otpIn(el,gid){el.classList.toggle('filled',el.value.length>0);if(el.value){const ins=document.getElementById(gid).querySelectorAll('.ob');const i=Array.from(ins).indexOf(el);if(i<ins.length-1)ins[i+1].focus();}}
+function otpLast(el,gid,btnId){el.classList.toggle('filled',el.value.length>0);const all=Array.from(document.getElementById(gid).querySelectorAll('.ob')).every(i=>i.value);if(btnId)document.getElementById(btnId).disabled=!all;}
+function otpBk(e,el){if(e.key==='Backspace'&&!el.value){const ins=el.closest('.or').querySelectorAll('.ob');const i=Array.from(ins).indexOf(el);if(i>0)ins[i-1].focus();}}
+function handleOTPEmail(){const code=Array.from(document.getElementById('otp-e').querySelectorAll('.ob')).map(i=>i.value).join('');const err=document.getElementById('otp-e-err');const boxes=document.getElementById('otp-e').querySelectorAll('.ob');err.classList.add('hidden');boxes.forEach(b=>b.classList.remove('err'));goTo('s-otp-cel');}
+function selDoc(t){['rg','cnh'].forEach(x=>{document.getElementById('opt-'+x).classList.remove('sel');document.getElementById('rc-'+x).classList.remove('on');});document.getElementById('opt-'+t).classList.add('sel');document.getElementById('rc-'+t).classList.add('on');document.getElementById('doc-tips').classList.remove('hidden');document.getElementById('doc-btn').disabled=false;}
+function chkPwd(){const v=document.getElementById('pw1').value;const c=document.getElementById('pw2').value;const rules={'r-len':v.length>=8,'r-num':/\d/.test(v),'r-spc':/[@!$#%^&*]/.test(v),'r-upp':/[A-Z]/.test(v),'r-low':/[a-z]/.test(v)};let all=true;Object.entries(rules).forEach(([id,ok])=>{const el=document.getElementById(id);const ico=el.querySelector('.ri');if(ok){el.className='pr ok';ico.textContent='✓';}else{el.className='pr';ico.textContent='○';all=false;}});document.getElementById('pwd-btn').disabled=!(all&&v===c&&c.length>0);}
+function showAE(){goTo('ae-sheet');}
+function toggleEmp(id){const b=document.getElementById(id);b.classList.toggle('on');b.textContent=b.classList.contains('on')?'✓':'';const any=document.querySelectorAll('#ae-sheet .ck.on').length>0;document.getElementById('ae-ft').classList.toggle('hidden',!any);}
+function np(k){const el=document.getElementById('cnpj-in');if(k==='del')el.value=el.value.slice(0,-1);else if(k!=='+*#'&&el.value.length<18)el.value+=k;}
+function cadastrarEmpresa(){let total=document.querySelectorAll('#ck1.on,#ck2.on').length;if(!document.getElementById('emp-add').classList.contains('hidden'))total++;if(total>=2)goTo('s-gestao');else goTo('s-dados-emp');}
+function addCNPJ(){document.getElementById('emp-add').classList.remove('hidden');document.getElementById('ae-ft').classList.remove('hidden');goTo('ae-sheet');}
+function toggleCk(ckId,declId){const ck=document.getElementById(ckId);ck.classList.toggle('on');ck.textContent=ck.classList.contains('on')?'✓':'';if(declId){document.getElementById(declId).classList.toggle('hidden');}}
+function startTimer(elId,s){if(tmrs[elId])clearInterval(tmrs[elId]);let r=s;const el=document.getElementById(elId);tmrs[elId]=setInterval(()=>{r--;el.textContent=String(Math.floor(r/60)).padStart(2,'0')+':'+String(r%60).padStart(2,'0');if(r<=0)clearInterval(tmrs[elId]);},1000);}
+
+function toggleSocio(key) {
+  var socios = ['cs','bf','ps','ma'];
+  socios.forEach(function(k) {
+    var wrap = document.getElementById('socio-' + k);
+    var detail = document.getElementById('socio-' + k + '-detail');
+    var radio = document.getElementById('radio-' + k);
+    if (k === key) {
+      wrap.style.border = '1.5px solid #7C3AED';
+      wrap.style.background = '#faf9ff';
+      radio.style.cssText = 'width:20px;height:20px;border-radius:50%;border:2px solid #7C3AED;background:#7C3AED;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+      radio.innerHTML = '<div style="width:9px;height:9px;border-radius:50%;background:#fff;"></div>';
+      detail.style.display = '';
+    } else {
+      wrap.style.border = '1.5px solid #e0e0e0';
+      wrap.style.background = '';
+      radio.style.cssText = 'width:20px;height:20px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;';
+      radio.innerHTML = '';
+      detail.style.display = 'none';
+    }
+  });
+}
+
+function abrirSelfie() {
+  // Loading state
+  var btn = document.getElementById('btn-selfie');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .8s linear infinite;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Aguardando...</span>';
+
+  // Open external link
+  window.open('https://banklyselfie.netlify.app/', '_blank');
+
+  // When user returns to this tab, go to senha-criar
+  function onFocus() {
+    window.removeEventListener('focus', onFocus);
+    setTimeout(function() {
+      goTo('s-senha-criar');
+    }, 600);
+  }
+  window.addEventListener('focus', onFocus);
+}
+// Dica: CPF começando com 1 = já cadastrado | OTP correto = 111111
+
+
+</script>
+</body>
+</html>
