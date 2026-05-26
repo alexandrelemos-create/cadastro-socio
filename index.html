@@ -98,7 +98,7 @@ input[readonly]{background:#f9f9f9;color:#666;}
 /* Gestao */
 .fb{display:flex;gap:8px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;}
 .fb::-webkit-scrollbar{display:none;}
-.ch{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;border:1.5px solid #e0e0e0;color:#555;background:#fff;flex-shrink:0;}
+.ch{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #e0e0e0;color:#555;background:#fff;flex-shrink:0;}
 .ch.active{background:#7C3AED;color:#fff;border-color:#7C3AED;}
 .cr{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
 .ci{width:36px;height:36px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
@@ -126,6 +126,10 @@ input[readonly]{background:#f9f9f9;color:#666;}
 .dnm{font-size:15px;font-weight:600;color:#111;flex:1;}
 .uz{border:1.5px dashed #d8b4fe;border-radius:10px;padding:18px;text-align:center;margin-top:12px;cursor:pointer;background:#faf9ff;}
 .uz p{font-size:12px;color:#aaa;margin-top:4px;line-height:1.4;}
+.uz.uploaded{border:1.5px solid #22c55e;background:#f0fdf4;cursor:pointer;}
+.uz.uploaded .uz-icon{color:#22c55e;}
+.uz.uploaded .uz-label{color:#16a34a;}
+.uz.uploaded .uz-hint{color:#86efac;}
 .ckr{display:flex;align-items:flex-start;gap:10px;margin-top:10px;cursor:pointer;}
 .cks{width:20px;height:20px;border:1.5px solid #ccc;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;margin-top:1px;transition:all .15s;}
 .cks.on{background:#7C3AED;border-color:#7C3AED;}
@@ -275,6 +279,7 @@ input[readonly]{background:#f9f9f9;color:#666;}
       <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpLast(this,'otp-e','otp-e-btn')" onkeydown="otpBk(event,this)">
     </div>
     <div class="emsg hidden" id="otp-e-err">O código inserido não é válido, verifique e tente novamente.</div>
+    <p style="font-size:12px;color:#bbb;text-align:center;margin-top:8px;">Você está em uma simulação, insira qualquer número para seguir (ex.: 111111)</p>
   </div>
   <div class="sp"></div>
   <div class="ft">
@@ -296,6 +301,7 @@ input[readonly]{background:#f9f9f9;color:#666;}
       <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpIn(this,'otp-c')" onkeydown="otpBk(event,this)">
       <input class="ob" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="otpLast(this,'otp-c','otp-c-btn')" onkeydown="otpBk(event,this)">
     </div>
+    <p style="font-size:12px;color:#bbb;text-align:center;margin-top:8px;">Você está em uma simulação, insira qualquer número para seguir (ex.: 111111)</p>
   </div>
   <div class="sp"></div>
   <div class="ft">
@@ -598,10 +604,10 @@ input[readonly]{background:#f9f9f9;color:#666;}
     <div style="font-size:12px;color:#888;margin-bottom:16px;">12.123.123/0001-12</div>
     <div class="pc"><div class="sb" style="border-color:#7C3AED;color:#7C3AED;">2/2</div><div><div style="font-size:15px;font-weight:700;color:#7C3AED;">Documentos da empresa</div><div style="font-size:12px;color:#888;">Em andamento...</div></div></div>
     <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Contrato social</div><span style="color:#bbb;">ℹ</span></div>
-      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="uz" onclick="toggleUpload(this)"><div class="uz-icon" style="font-size:24px;color:#7C3AED;">↑</div><div class="uz-label" style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p class="uz-hint">Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
     </div>
     <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Comprovante de endereço</div><span style="color:#bbb;">ℹ</span></div>
-      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="uz" onclick="toggleUpload(this)"><div class="uz-icon" style="font-size:24px;color:#7C3AED;">↑</div><div class="uz-label" style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p class="uz-hint">Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
       <div class="ckr" onclick="toggleCk('ckb','decl-end')"><div class="cks" id="ckb"></div><span style="font-size:13px;color:#555;">Não tenho comprovante. Quero utilizar uma declaração de endereço.</span></div>
       <div id="decl-end" class="hidden dstps">
         <div style="font-size:13px;font-weight:600;color:#111;margin-top:4px;">Como fazer a declaração de endereço</div>
@@ -613,7 +619,7 @@ input[readonly]{background:#f9f9f9;color:#666;}
       </div>
     </div>
     <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Última alteração contratual</div><span style="color:#bbb;">ℹ</span></div>
-      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="uz" onclick="toggleUpload(this)"><div class="uz-icon" style="font-size:24px;color:#7C3AED;">↑</div><div class="uz-label" style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p class="uz-hint">Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
       <div class="ckr" onclick="toggleCk('ckc',null)"><div class="cks" id="ckc"></div><span style="font-size:13px;color:#555;">Minha empresa não realizou alteração contratual nem eleição de novo representante legal.</span></div>
     </div>
   </div>
@@ -634,7 +640,7 @@ input[readonly]{background:#f9f9f9;color:#666;}
       <label>Conta</label><input type="text" placeholder="Digite o número da conta"><div style="font-size:11px;color:#aaa;margin-top:3px;">Inclua o dígito se houver</div>
     </div>
     <div class="ds"><div class="dtr"><div class="dic">📄</div><div class="dnm">Comprovante bancário</div><span style="color:#bbb;">ℹ</span></div>
-      <div class="uz"><div style="font-size:24px;color:#7C3AED;">↑</div><div style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p>Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
+      <div class="uz" onclick="toggleUpload(this)"><div class="uz-icon" style="font-size:24px;color:#7C3AED;">↑</div><div class="uz-label" style="font-size:14px;font-weight:600;color:#333;margin-top:4px;">Selecionar arquivos</div><p class="uz-hint">Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.</p></div>
     </div>
   </div>
   <div class="ft"><button class="bp" data-maze-id="btn-banco-continuar" onclick="goTo('s-next')">Continuar</button><button class="bo" onclick="goTo('s-docs-emp')">Voltar</button></div>
@@ -642,6 +648,9 @@ input[readonly]{background:#f9f9f9;color:#666;}
 
 <!-- S26: Próximos passos -->
 <div class="screen" id="s-next">
+  <div id="toast-next" style="position:absolute;top:20px;left:16px;right:16px;transform:translateY(-80px) translateY(-80px);background:#111;color:#fff;font-size:13px;font-weight:500;padding:12px 18px;border-radius:12px;display:flex;align-items:center;gap:8px;z-index:20;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;">
+    <span style="font-size:16px;">✅</span> Tudo certo com seu cadastro até aqui, agora precisamos de uns dias para analisar tudo!
+  </div>
   <div class="tpb">
     <button style="background:none;border:none;cursor:pointer;font-size:22px;color:#555;" onclick="goTo('s-menu')">☰</button>
     <img src="https://i.imgur.com/K726fWY.png" style="height:28px;object-fit:contain;">
@@ -685,6 +694,7 @@ function goTo(id){
   if(id==='s-loading-emp') setTimeout(()=>goTo('ae-sheet'),2000);
   if(id==='s-otp-email') startTimer('t-email',180);
   if(id==='s-otp-cel') startTimer('t-cel',180);
+  if(id==='s-next'){ var t=document.getElementById('toast-next'); setTimeout(function(){ t.style.opacity='1'; t.style.transform='translateY(0)'; setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateY(-80px)'; },5000); },300); }
 }
 function closeBS(id){document.getElementById(id).classList.add('hidden');}
 function fmtCPF(el){let v=el.value.replace(/\D/g,'').slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');el.value=v;}
@@ -718,11 +728,43 @@ function abrirSelfie() {
   }
   window.addEventListener('focus', onFocus);
 }
+function toggleUpload(el){
+  var uploaded = el.classList.toggle("uploaded");
+  var icon = el.querySelector(".uz-icon");
+  var label = el.querySelector(".uz-label");
+  var hint = el.querySelector(".uz-hint");
+  if(uploaded){
+    icon.textContent = "✓";
+    icon.style.color = "#22c55e";
+    label.textContent = "documento.pdf";
+    label.style.color = "#16a34a";
+    hint.textContent = "Toque para remover";
+  } else {
+    icon.textContent = "↑";
+    icon.style.color = "#7C3AED";
+    label.textContent = "Selecionar arquivos";
+    label.style.color = "#333";
+    hint.textContent = "Formatos aceitos: PDF, PNG ou JPG. Tamanho máximo: 8 MB.";
+  }
+}
 // Dica: CPF começando com 1 = já cadastrado | OTP correto = 111111
   const hash = window.location.hash.replace('#','');
   if(hash) goTo(hash);
 
 
+
+// Navegação por teclado: [ avança | ` retorna
+var screenOrder = ['s-cpf','s-dados','s-otp-email','s-otp-cel','s-doc','s-perm','s-cam-f','s-rev-f','s-cam-v','s-rev-v','s-selfie-dicas','s-unico-intro','s-unico-selfie','s-unico-loading','s-unico-pronto','s-unico-verif','s-unico-ok','s-senha-criar','s-cadastrar-estab','s-gestao','ae-sheet','s-dados-emp','s-docs-emp','s-banco','s-next'];
+document.addEventListener('keydown', function(e) {
+  var active = document.querySelector('.screen.active');
+  if (!active) return;
+  var idx = screenOrder.indexOf(active.id);
+  if (e.key === '[' && idx < screenOrder.length - 1) {
+    goTo(screenOrder[idx + 1]);
+  } else if ((e.key === '`' || e.key === "'" || e.key === '\u00b4' || e.keyCode === 192) && idx > 0) {
+    goTo(screenOrder[idx - 1]);
+  }
+});
 </script>
 </body>
 </html>
